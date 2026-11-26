@@ -1,77 +1,85 @@
-# NEXORA 3D
+# NEXORA 3D — Loja virtual com painel administrativo
 
-Loja online de peças personalizadas feitas em impressora 3D. Site estático (HTML, CSS e JavaScript puro), sem etapa de build, pronto para a **Vercel**.
+Loja de peças personalizadas em impressão 3D. Site estático (HTML, CSS e JavaScript puro), sem build, pronto para a **Vercel**, com **Firebase** (Authentication + Firestore).
 
-**O que o site tem**
-- Abas (Início, Produtos, Pedido), catálogo com filtros e carrinho
-- Pagamento por **Pix** com QR Code gerado com o valor do carrinho
-- Pedido enviado por **WhatsApp** e **Gmail**
-- Desconto de fidelidade (5% por pedido, até 15%) e dados do cliente salvos no aparelho
-- Cancelamento de pedido e chat automático **NEXORA DÚVIDAS**
-- **Área do editor** (rodapé): dono e editores autorizados por aparelho cadastram produtos e preços (Firebase)
+- **Loja pública** (`/`): catálogo, carrinho, Pix com QR Code, pedido por WhatsApp e Gmail, desconto de fidelidade, cancelamento e chat NEXORA DÚVIDAS. Produtos, textos e banner vêm do Firestore e atualizam sozinhos.
+- **Painel** (`/admin/`): login por e-mail e senha, dashboard, produtos (adicionar, editar, excluir, preço, imagem, ativar/desativar), pedidos (ver cliente e itens, mudar status, concluir) e personalização da loja (textos, banner, contato).
 
 ## Estrutura
 
 ```
-nexora3d/
-├── public/                 <- o site (é isto que a Vercel publica)
-│   ├── index.html
-│   ├── favicon.svg
-│   ├── css/style.css
-│   └── js/
-│       ├── config.js           <- WhatsApp, e-mail e Pix (edite aqui)
-│       ├── firebase-config.js  <- dados do seu projeto Firebase
-│       ├── app.js              <- catálogo, carrinho, pedido e Pix
-│       ├── extras.js           <- desconto, dados salvos e chat de dúvidas
-│       ├── cart-bar.js         <- botão "Prosseguir com a compra"
-│       ├── cancel.js           <- cancelamento de pedido
-│       └── admin.js            <- Área do editor (Firebase)
-├── firestore.rules         <- regras de segurança do banco
-├── vercel.json             <- configuração da Vercel
-├── package.json
-└── README.md
+public/                  <- publicado pela Vercel
+├── index.html           loja
+├── css/style.css
+├── js/
+│   ├── config.js        WhatsApp, e-mail e Pix padrão
+│   ├── firebase-config.js, firebase.js   conexão com o Firebase
+│   ├── app.js, extras.js, cart-bar.js, cancel.js   loja, carrinho, Pix, desconto, bot
+│   └── store.js         produtos, configurações e gravação de pedidos no Firestore
+└── admin/               painel (index.html, admin.js, admin.css)
+firestore.rules          regras de segurança do banco
+vercel.json, package.json
 ```
 
-## 1. Configurar o Firebase (uma vez)
+## Configurar o Firebase (faça na ordem)
 
-1. No [console do Firebase](https://console.firebase.google.com), abra o projeto e crie o **Firestore Database**.
-2. Em **Regras**, apague o conteúdo, cole o arquivo `firestore.rules` e clique em **Publicar**.
-3. Em **Authentication → Método de login**, ative **Anônimo**.
-4. O arquivo `public/js/firebase-config.js` já traz os dados do projeto `nexora3d-82971`. Para usar outro projeto, troque os valores.
+Abra o [Console do Firebase](https://console.firebase.google.com) e entre no projeto **nexora3d-82971**.
 
-## 2. Publicar
+### 1. Ativar o login
+1. Menu da esquerda → **Build (Criação) → Authentication** → aba **Sign-in method (Método de login)**.
+2. Clique em **E-mail/senha** → ative a primeira chave → **Salvar**. (Deixe **Anônimo** ativado também: é o que permite o cliente enviar o pedido sem criar conta.)
 
-1. Extraia o ZIP.
-2. No GitHub, crie um repositório novo (pode ser privado).
-3. Clique em **Add file → Upload files** e envie o **conteúdo** da pasta extraída (arrastando `public`, `vercel.json`, `package.json`, `firestore.rules`, `README.md` e `.gitignore`). O `vercel.json` precisa ficar na raiz do repositório. Se `.gitignore` não aparecer no seu sistema, pode ignorá-lo.
-4. Na [Vercel](https://vercel.com), clique em **Add New → Project**, escolha o repositório e clique em **Deploy**. Não precisa mudar nenhuma configuração: o `vercel.json` já define a pasta `public` e desliga o build.
-5. Com o link pronto (`https://seu-projeto.vercel.app`), volte ao Firebase em **Authentication → Configurações → Domínios autorizados** e adicione esse domínio (e o seu domínio próprio, se tiver). Sem isso o login anônimo falha.
+### 2. Criar a sua conta de proprietário
+1. Em Authentication, aba **Users (Usuários)** → **Add user (Adicionar usuário)**.
+2. Digite o seu e-mail e uma senha forte → **Add user**. Não existe tela de cadastro no site: ninguém consegue criar conta de administrador pelo app.
+3. Na lista, copie o valor da coluna **User UID (UID do usuário)**.
 
-## 3. Primeiro acesso (importante)
+### 3. Cadastrar o primeiro proprietário (procedimento seguro)
+1. Menu → **Firestore Database** (crie o banco, se ainda não existir, em modo de produção).
+2. Aba **Data (Dados)** → **Start collection (Iniciar coleção)** → ID da coleção: `admins` → **Next**.
+3. **ID do documento: cole o UID copiado**. Adicione um campo `ativo`, tipo `boolean`, valor `true` → **Save**.
 
-Antes de divulgar o link:
-1. Abra o site no **seu celular**, role até o rodapé e toque em **Área do editor**.
-2. Toque em **Tornar este celular o dono**. O primeiro aparelho a fazer isso vira o dono.
-3. Toque em **Salvar produtos padrão** e depois edite nomes, preços e descrições, ou use **Adicionar produto**.
+Pronto: só quem tem o UID cadastrado aí vira administrador. As regras proíbem criar ou alterar `admins` pelo app, então ninguém (nem anônimo, nem cliente) consegue se promover. Para adicionar outro administrador, repita o passo 2 e o 3 com o UID dele.
 
-**Autorizar outro editor:** a pessoa abre a Área do editor, digita o nome do aparelho e pede acesso. O pedido aparece para você (🔴 no rodapé) e você toca em **Autorizar** ou **Recusar**.
+> Se esquecer o UID: entre em `/admin/` com a conta; a tela "Sem acesso" mostra o UID para copiar.
 
-## Rodar no computador (opcional)
+### 4. Publicar as regras de segurança
+1. Firestore Database → aba **Rules (Regras)**.
+2. Apague tudo, cole o conteúdo do arquivo `firestore.rules` e clique em **Publish (Publicar)**.
 
+### 5. Autorizar o domínio do site
+Authentication → **Settings (Configurações)** → **Authorized domains (Domínios autorizados)** → **Add domain** e adicione o endereço da Vercel (ex.: `3dsite-ashy.vercel.app`) e o domínio próprio, se tiver.
+
+### 6. (Opcional) E-mail de recuperação de senha em português
+Authentication → **Templates (Modelos)** → **Password reset (Redefinição de senha)** → lápis → altere o idioma para **Português (Brasil)**.
+
+## Publicar (GitHub + Vercel)
+1. Suba o **conteúdo** desta pasta para um repositório do GitHub (o `vercel.json` precisa ficar na raiz).
+2. Na Vercel: **Add New → Project** → escolha o repositório → **Deploy** (sem mudar nada).
+3. Cada novo commit no GitHub publica sozinho.
+
+## Primeiro uso do painel
+1. Abra `https://seu-site/admin/` (ou o link **Área do administrador** no rodapé da loja) e entre com e-mail e senha.
+2. Em **Produtos**, toque em **Importar os 9 produtos padrão** e depois edite preços, imagens e descrições.
+3. Em **Loja**, ajuste textos, banner e contato. Os pedidos dos clientes aparecem em **Pedidos** em tempo real.
+
+## Como a segurança funciona
+- O painel só abre para quem está em `admins`, mas **a proteção real está nas regras do Firestore**: produtos e configurações só são gravados por administrador, pedidos só são lidos por administrador, e o cliente só consegue **criar** o próprio pedido.
+- A administradora precisa ter entrado por **e-mail/senha** (sessão anônima nunca vale como admin).
+- O `apiKey` do Firebase no código **não é segredo**; quem protege os dados são as regras. Nenhuma senha está no código.
+- Se você usava a versão anterior (dono por aparelho), as coleções `config` e `editors` do Firestore não são mais usadas e podem ser apagadas.
+
+## Imagens
+As imagens são reduzidas no navegador e salvas dentro do próprio Firestore (nada de Firebase Storage, que hoje exige plano pago). Funciona bem para fotos de produto e banner; para arquivos grandes, use o campo de link (https://).
+
+## Limites
+- O Pix não é confirmado automaticamente: confira o dinheiro e mude o status do pedido para **Pago**.
+- O WhatsApp e o Gmail abrem com a mensagem pronta; o cliente toca em enviar. O pedido também fica salvo no painel.
+- Pedidos cancelados pelo cliente chegam por WhatsApp; mude o status no painel.
+- O código Pix fica em `public/js/config.js`.
+
+## Rodar no computador
 ```bash
 npm run dev
 ```
-
-Abre em http://localhost:3000. Precisa do Node 18 ou mais novo.
-
-## Mudar WhatsApp, e-mail ou Pix
-
-Edite `public/js/config.js`, faça commit no GitHub e a Vercel publica sozinha.
-
-## Limites que você precisa conhecer
-
-- **O pagamento não é confirmado automaticamente.** O cliente paga o Pix e envia o comprovante pelo WhatsApp; você confere o dinheiro antes de produzir. Confirmação automática exige um serviço de pagamento (Mercado Pago, Efí etc.) e um servidor.
-- **O envio por WhatsApp e Gmail abre o app com a mensagem pronta**, e o cliente toca em enviar.
-- **Desconto e dados salvos** ficam só no aparelho do cliente.
-- **Preços são calculados no navegador.** Confira sempre o valor recebido no Pix.
-- Se o dono limpar os dados do navegador, perde o acesso de dono. Para recuperar, apague o documento `config/owner` no console do Firebase e refaça o passo 3.
+Abre em http://localhost:3000 (Node 18+). Adicione `localhost` aos domínios autorizados do Firebase (já vem por padrão).

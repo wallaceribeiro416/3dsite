@@ -14,7 +14,7 @@ var R=function(v){return "R$ "+v.toFixed(2).replace(".",",")};
 function chips(){var cs=["Todos"];P.forEach(function(x){if(cs.indexOf(x.c)<0)cs.push(x.c)});
 $("chips").innerHTML=cs.map(function(c){return '<button class="chip'+(c==cat?' on':'')+'" data-c="'+c+'">'+c+'</button>'}).join("")}
 function grid(){$("grid").innerHTML=P.filter(function(x){return cat=="Todos"||x.c==cat}).map(function(x){
-return '<div class="prod"><div class="pic">'+x.e+'</div><div class="pb"><h3>'+x.n+'</h3><p>'+x.d+'</p><div class="row"><span class="price">'+(x.p?R(x.p):"Orçamento")+'</span><button class="add" data-a="'+x.id+'">Comprar</button></div></div></div>'}).join("")}
+return '<div class="prod"><div class="pic">'+(x.img?'<img src="'+x.img+'" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover">':x.e)+'</div><div class="pb"><h3>'+x.n+'</h3><p>'+x.d+'</p><div class="row"><span class="price">'+(x.p?R(x.p):"Orçamento")+'</span><button class="add" data-a="'+x.id+'">Comprar</button></div></div></div>'}).join("")}
 function render(){var ids=Object.keys(cart),n=0,t=0;
 $("items").innerHTML=ids.length?ids.map(function(i){var x=P.filter(function(y){return y.id==i})[0],q=cart[i];n+=q;t+=q*x.p;
 return '<div class="it"><span>'+x.n+'</span><span class="q"><button data-m="'+i+'">−</button><span>'+q+'</span><button data-p="'+i+'">+</button></span></div>'}).join(""):'<div class="empty">Seu carrinho está vazio. Adicione produtos acima.</div>';

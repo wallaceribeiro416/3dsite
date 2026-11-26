@@ -1,36 +1,53 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signed() { return request.auth != null; }
-    function isOwner() {
-      return signed()
-        && exists(/databases/$(database)/documents/config/owner)
-        && get(/databases/$(database)/documents/config/owner).data.uid == request.auth.uid;
-    }
-    function isEditor() {
-      return signed()
-        && exists(/databases/$(database)/documents/editors/$(request.auth.uid))
-        && get(/databases/$(database)/documents/editors/$(request.auth.uid)).data.status == 'approved';
+
+    function signedIn() { return request.auth != null; }
+
+    // Administrador = conta de E-MAIL/SENHA cujo UID existe em /admins/{uid}.
+    // Os documentos de /admins só podem ser criados pelo Console do Firebase (regras bloqueiam o app).
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.firebase.sign_in_provider == 'password'
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
-    // Produtos: todos leem, só dono e editores autorizados alteram
+    function validOrder() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['uid','name','phone','email','details','items','subtotal','discountPct','total','status','payment','createdAt'])
+        && d.uid == request.auth.uid
+        && d.status == 'novo'
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 80
+        && d.phone is string && d.phone.size() <= 30
+        && d.email is string && d.email.size() <= 120
+        && d.details is string && d.details.size() <= 1000
+        && d.items is list && d.items.size() > 0 && d.items.size() <= 40
+        && d.total is number && d.total >= 0 && d.total <= 100000
+        && d.createdAt == request.time;
+    }
+
+    // Lista de administradores: cada conta só consegue ver o próprio documento; ninguém grava pelo app.
+    match /admins/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Produtos: todos leem (a loja), só administrador altera.
     match /products/{id} {
       allow read: if true;
-      allow write: if isOwner() || isEditor();
+      allow write: if isAdmin();
     }
 
-    // Dono: pode ser criado uma única vez (nunca alterado ou apagado pelo site)
-    match /config/owner {
-      allow read: if signed();
-      allow create: if signed() && request.resource.data.uid == request.auth.uid;
+    // Configurações da loja: todos leem, só administrador altera.
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
-    // Pedidos de acesso: cada aparelho cria o seu como "pending"; só o dono autoriza
-    match /editors/{uid} {
-      allow read: if signed() && (request.auth.uid == uid || isOwner());
-      allow create: if signed() && request.auth.uid == uid
-        && request.resource.data.status == 'pending';
-      allow update, delete: if isOwner();
+    // Pedidos: o cliente (mesmo anônimo) só CRIA; só administrador lê, altera e exclui.
+    match /orders/{id} {
+      allow create: if signedIn() && validOrder();
+      allow read, update, delete: if isAdmin();
     }
   }
 }
