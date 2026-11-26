@@ -1,0 +1,13 @@
+{
+  "name": "nexora-3d",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Loja NEXORA 3D - site estático com Firebase (produtos, editores e pedidos por WhatsApp/Gmail/Pix)",
+  "scripts": {
+    "dev": "npx --yes serve public -l 3000"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

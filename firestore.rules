@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signed() { return request.auth != null; }
+    function isOwner() {
+      return signed()
+        && exists(/databases/$(database)/documents/config/owner)
+        && get(/databases/$(database)/documents/config/owner).data.uid == request.auth.uid;
+    }
+    function isEditor() {
+      return signed()
+        && exists(/databases/$(database)/documents/editors/$(request.auth.uid))
+        && get(/databases/$(database)/documents/editors/$(request.auth.uid)).data.status == 'approved';
+    }
+
+    // Produtos: todos leem, só dono e editores autorizados alteram
+    match /products/{id} {
+      allow read: if true;
+      allow write: if isOwner() || isEditor();
+    }
+
+    // Dono: pode ser criado uma única vez (nunca alterado ou apagado pelo site)
+    match /config/owner {
+      allow read: if signed();
+      allow create: if signed() && request.resource.data.uid == request.auth.uid;
+    }
+
+    // Pedidos de acesso: cada aparelho cria o seu como "pending"; só o dono autoriza
+    match /editors/{uid} {
+      allow read: if signed() && (request.auth.uid == uid || isOwner());
+      allow create: if signed() && request.auth.uid == uid
+        && request.resource.data.status == 'pending';
+      allow update, delete: if isOwner();
+    }
+  }
+}
