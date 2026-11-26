@@ -1,24 +1,56 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
 <title>NEXORA 3D — Ideias que ganham forma</title>
+
 <meta name="description" content="NEXORA 3D: peças personalizadas feitas em impressora 3D para pessoas e empresas. Presentes, decoração, brindes e projetos sob encomenda.">
+
 <meta name="theme-color" content="#07070a">
 <meta property="og:title" content="NEXORA 3D — Ideias que ganham forma">
 <meta property="og:description" content="Peças únicas e personalizadas em impressão 3D. Faça seu pedido online.">
+
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css">
+
+<!-- CSS -->
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<header><div class="wrap nav">
-<a class="brand" href="#topo"><svg viewBox="0 0 40 40"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6dc8c"/><stop offset="1" stop-color="#a87a1c"/></linearGradient></defs><polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="url(#g)" stroke-width="3"/><path d="M12 13l16 14M28 13L12 27" stroke="url(#g)" stroke-width="4"/></svg><span>NEXORA <span class="gold">3D</span></span></a>
-<nav><button class="cartbtn" id="cb">🛒 <span id="cc">0</span></button></nav>
+
+<header>
+<div class="wrap nav">
+<a class="brand" href="#topo">
+<svg viewBox="0 0 40 40">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#f6dc8c"/>
+<stop offset="1" stop-color="#a87a1c"/>
+</linearGradient>
+</defs>
+<polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="url(#g)" stroke-width="3"/>
+<path d="M12 13l16 14M28 13L12 27" stroke="url(#g)" stroke-width="4"/>
+</svg>
+<span>NEXORA <span class="gold">3D</span></span>
+</a>
+
+<nav>
+<button class="cartbtn" id="cb">🛒 <span id="cc">0</span></button>
+</nav>
 </div>
-<div class="wrap tabs"><button class="tb on" data-tab="inicio">Início</button><button class="tb" data-tab="produtos">Produtos</button><button class="tb" data-tab="pedido">Pedido</button></div></header>
+
+<div class="wrap tabs">
+<button class="tb on" data-tab="inicio">Início</button>
+<button class="tb" data-tab="produtos">Produtos</button>
+<button class="tb" data-tab="pedido">Pedido</button>
+</div>
+</header>
 
 <main class="wrap" id="topo">
+
 <div class="tab on" id="t-inicio">
 <div class="hero">
 <div>
@@ -26,9 +58,16 @@
 <div class="tag">PERSONALIZAÇÃO • DESIGN • IMPRESSÃO 3D</div>
 <h2>Transforme ideias em realidade com <em class="gold">impressão 3D!</em></h2>
 <p>Na NEXORA 3D, criamos peças únicas, personalizadas e funcionais, unindo tecnologia, criatividade e qualidade em cada detalhe.</p>
-<button class="btn" data-tab="produtos">Ver produtos</button><button class="btn ghost" data-tab="pedido">Fazer pedido</button>
+<button class="btn" data-tab="produtos">Ver produtos</button>
+<button class="btn ghost" data-tab="pedido">Fazer pedido</button>
 </div>
-<div class="printer"><div class="frame"></div><div class="head"></div><div class="vase"></div><div class="bed"></div></div>
+
+<div class="printer">
+<div class="frame"></div>
+<div class="head"></div>
+<div class="vase"></div>
+<div class="bed"></div>
+</div>
 </div>
 
 <div class="perks">
@@ -38,6 +77,7 @@
 <div class="perk"><b>🤝</b><span>Atendimento próximo e confiável</span></div>
 </div>
 </div>
+
 <div class="tab" id="t-produtos">
 <section id="produtos">
 <h2 class="title gold">Nossos produtos</h2>
@@ -48,43 +88,114 @@
 
 <section id="empresas">
 <div class="two">
-<div class="box"><h3 class="gold">Atendemos pessoas e empresas!</h3><ul class="ck"><li>Solicite um orçamento</li><li>Personalize sua ideia</li><li>Surpreenda com o diferente</li></ul></div>
-<div class="box"><h3 class="gold">O que fazemos</h3><ul class="ck"><li>Presentes personalizados</li><li>Decoração e organização</li><li>Peças para empresas</li><li>Brindes e lembrancinhas</li><li>Projetos sob encomenda</li></ul></div>
+<div class="box">
+<h3 class="gold">Atendemos pessoas e empresas!</h3>
+<ul class="ck">
+<li>Solicite um orçamento</li>
+<li>Personalize sua ideia</li>
+<li>Surpreenda com o diferente</li>
+</ul>
+</div>
+
+<div class="box">
+<h3 class="gold">O que fazemos</h3>
+<ul class="ck">
+<li>Presentes personalizados</li>
+<li>Decoração e organização</li>
+<li>Peças para empresas</li>
+<li>Brindes e lembrancinhas</li>
+<li>Projetos sob encomenda</li>
+</ul>
+</div>
 </div>
 </section>
 </div>
+
 <div class="tab" id="t-pedido">
 <section id="pedido">
 <h2 class="title gold">Faça seu pedido</h2>
 <p class="sub">Preencha os dados e envie. Seu pedido chega direto no nosso WhatsApp e e-mail.</p>
+
 <div class="two">
-<div class="box"><h3>🛒 Seu carrinho</h3><div class="items" id="items"></div><p class="empty" id="dl" style="color:var(--gold)"></p><div class="total"><span>Total estimado</span><span class="gold" id="tot">R$ 0,00</span></div><p class="empty">Itens sob encomenda têm valor confirmado no orçamento.</p></div>
+<div class="box">
+<h3>🛒 Seu carrinho</h3>
+<div class="items" id="items"></div>
+<p class="empty" id="dl" style="color:var(--gold)"></p>
+<div class="total">
+<span>Total estimado</span>
+<span class="gold" id="tot">R$ 0,00</span>
+</div>
+<p class="empty">Itens sob encomenda têm valor confirmado no orçamento.</p>
+</div>
+
 <div class="box" id="fbox">
 <form id="f" onsubmit="return false">
-<label>Seu nome</label><input id="n" placeholder="Nome completo" autocomplete="name">
-<label>WhatsApp</label><input id="t" placeholder="(00) 00000-0000" inputmode="tel" autocomplete="tel">
-<label>E-mail (opcional)</label><input id="e" placeholder="voce@email.com" inputmode="email" autocomplete="email">
-<label>Detalhes / personalização (nome, cor, logo, medidas…)</label><textarea id="d" placeholder="Conte sua ideia"></textarea>
-<label style="display:flex;gap:8px;align-items:center;margin-top:14px"><input type="checkbox" id="sd" checked style="width:auto"> Salvar meus dados neste aparelho</label><button type="button" class="chip" id="cd" style="margin-top:8px">Apagar dados salvos</button>
-<div style="margin-top:16px"><button class="btn" id="send" style="width:100%">Gerar Pix e pagar</button></div>
+<label>Seu nome</label>
+<input id="n" placeholder="Nome completo" autocomplete="name">
+
+<label>WhatsApp</label>
+<input id="t" placeholder="(00) 00000-0000" inputmode="tel" autocomplete="tel">
+
+<label>E-mail (opcional)</label>
+<input id="e" placeholder="voce@email.com" inputmode="email" autocomplete="email">
+
+<label>Detalhes / personalização (nome, cor, logo, medidas…)</label>
+<textarea id="d" placeholder="Conte sua ideia"></textarea>
+
+<label style="display:flex;gap:8px;align-items:center;margin-top:14px">
+<input type="checkbox" id="sd" checked style="width:auto">
+Salvar meus dados neste aparelho
+</label>
+
+<button type="button" class="chip" id="cd" style="margin-top:8px">Apagar dados salvos</button>
+
+<div style="margin-top:16px">
+<button class="btn" id="send" style="width:100%">Gerar Pix e pagar</button>
+</div>
+
 <p class="empty" id="err" style="color:#ff8a6a"></p>
 </form>
-<div class="ok" id="ok"><h3 class="gold">Pague com Pix</h3><p class="empty">Valor: <b class="gold" id="pv"></b></p><div id="qr" style="background:#fff;padding:12px;border-radius:14px;display:inline-block;margin:10px 0"></div><p class="empty">Ou use o Pix copia e cola:</p><textarea id="pc" readonly style="min-height:70px;font-size:12px"></textarea><button class="chip" id="cp" style="margin:8px 0">Copiar código</button><p class="empty">1) Pague no app do seu banco. 2) Toque abaixo e envie o comprovante no WhatsApp. O pedido só entra em produção depois que o pagamento for confirmado.</p><a class="btn" id="bw" target="_blank" rel="noopener">Enviar pedido + comprovante</a><a class="btn ghost" id="bm">Enviar por Gmail</a><p class="empty" id="gift" style="color:var(--gold);font-weight:700"></p><div style="margin-top:12px"><button class="chip" id="nw">Novo pedido</button></div></div>
+
+<div class="ok" id="ok">
+<h3 class="gold">Pague com Pix</h3>
+<p class="empty">Valor: <b class="gold" id="pv"></b></p>
+<div id="qr" style="background:#fff;padding:12px;border-radius:14px;display:inline-block;margin:10px 0"></div>
+<p class="empty">Ou use o Pix copia e cola:</p>
+<textarea id="pc" readonly style="min-height:70px;font-size:12px"></textarea>
+<button class="chip" id="cp" style="margin:8px 0">Copiar código</button>
+<p class="empty">1) Pague no app do seu banco. 2) Toque abaixo e envie o comprovante no WhatsApp. O pedido só entra em produção depois que o pagamento for confirmado.</p>
+<a class="btn" id="bw" target="_blank" rel="noopener">Enviar pedido + comprovante</a>
+<a class="btn ghost" id="bm">Enviar por Gmail</a>
+<p class="empty" id="gift" style="color:var(--gold);font-weight:700"></p>
+<div style="margin-top:12px">
+<button class="chip" id="nw">Novo pedido</button>
+</div>
+</div>
 </div>
 </div>
 </section>
 </div>
+
 </main>
 
-<footer><div class="wrap"><div class="brand" style="justify-content:center;margin-bottom:6px">NEXORA <span class="gold">3D</span></div><i style="font-family:Georgia,serif" class="gold">Ideias que ganham forma.</i><p style="margin-top:8px">© 2026 NEXORA 3D — Personalização • Design • Impressão 3D</p></div></footer>
+<footer>
+<div class="wrap">
+<div class="brand" style="justify-content:center;margin-bottom:6px">NEXORA <span class="gold">3D</span></div>
+<i style="font-family:Georgia,serif" class="gold">Ideias que ganham forma.</i>
+<p style="margin-top:8px">© 2026 NEXORA 3D — Personalização • Design • Impressão 3D</p>
+</div>
+</footer>
+
 <a class="wa" id="wa" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
 
+<!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="js/config.js"></script>
-<script src="js/app.js"></script>
-<script src="js/extras.js"></script>
-<script src="js/cart-bar.js"></script>
-<script src="js/cancel.js"></script>
-<script type="module" src="js/admin.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="extras.js"></script>
+<script src="cart-bar.js"></script>
+<script src="cancel.js"></script>
+<script type="module" src="admin.js"></script>
+
 </body>
 </html>
