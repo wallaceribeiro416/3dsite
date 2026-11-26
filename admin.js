@@ -1,6 +1,7 @@
+
 import {signInWithEmailAndPassword,signOut,onAuthStateChanged,sendPasswordResetEmail,setPersistence,browserLocalPersistence} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {collection,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,onSnapshot,query,orderBy,limit} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import {auth,db} from "/js/firebase.js";
+import {auth,db} from "/firebase.js";
 
 const app = document.getElementById("app");
 const h = (t, a, ...k) => { const e = document.createElement(t); for (const [n, v] of Object.entries(a || {})) { if (n === "class") e.className = v; else if (n.startsWith("on")) e[n] = v; else if (v != null && v !== false) e.setAttribute(n, v === true ? "" : v); } e.append(...k.flat().filter(x => x != null && x !== false)); return e; };
